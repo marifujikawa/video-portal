@@ -9,17 +9,18 @@ export const sampleVideos: Video[] = [
     thumbnail: "https://picsum.photos/seed/1/300/200",
     category: "Programming",
     views: 1234,
-    likes: 89
+    likes: 89,
+    hasLiked: false
   },
   {
     id: 2,
-    title: "TypeScript Fundamentals",
-    description: "Master TypeScript basics and advanced concepts",
+    title: "Test",
+    description: "Learn the basics of React development",
     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    thumbnail: "https://picsum.photos/seed/2/300/200",
+    thumbnail: "https://picsum.photos/seed/1/300/200",
     category: "Programming",
-    views: 2345,
-    likes: 145
+    views: 1234,
+    likes: 89,
+    hasLiked: false
   },
-  // Add more sample videos as needed
 ];

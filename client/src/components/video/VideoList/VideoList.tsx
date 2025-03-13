@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import VideoCard from './VideoCard';
-import VideoCardSkeleton from './VideoCardSkeleton';
-import { Video } from '../../types';
+import VideoCard from '../VideoCard';
+import VideoCardSkeleton from '../VideoSkeleton/VideoCardSkeleton';
+import { Video } from '../../../types';
 import styles from './VideoList.module.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 

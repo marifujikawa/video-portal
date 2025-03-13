@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Hls from 'hls.js';
-import { isValidVideoUrl, getVideoType } from '../../utils/videoUtils';
+import { isValidVideoUrl, getVideoType } from '@/utils/videoUtils';
 import styles from './VideoPlayer.module.css';
 
 interface VideoPlayerProps {
@@ -23,6 +23,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
 
     const initializeVideo = async () => {
       try {
+        const videoElement = videoRef.current;
+        if (!videoElement) return;
+
         if (videoUrl.endsWith('.m3u8')) {
           if (Hls.isSupported()) {
             hls = new Hls({
@@ -30,15 +33,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
               lowLatencyMode: true,
             });
             hls.loadSource(videoUrl);
-            hls.attachMedia(videoRef.current!);
+            hls.attachMedia(videoElement);
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              videoRef.current?.play().catch(e => console.log('Playback prevented:', e));
+              videoElement.play().catch(e => console.log('Playback prevented:', e));
             });
-          } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-            videoRef.current.src = videoUrl;
+          } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            videoElement.src = videoUrl;
           }
         } else {
-          videoRef.current.src = videoUrl;
+          videoElement.src = videoUrl;
         }
       } catch (err) {
         setError('Error loading video');

@@ -6,8 +6,9 @@ export interface Video {
   thumbnail: string;
   views: number;
   likes: number;
-  category: string;
-  hasLiked: boolean;
+  category: string; 
+  hasLiked?: boolean;
+  backupUrl?: string;
 }
 
 export interface VideoListResponse {

@@ -23,14 +23,15 @@ const api = axios.create({
   baseURL: 'http://localhost:80/api'
 });
 
-// Fallback videos in case API fails
 const EXAMPLE_VIDEOS = [
   {
     id: 1,
     title: "Big Buck Bunny",
+    category: "1",
     description: "Big Buck Bunny animated short",
     thumbnail: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
     url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    backupUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     views: 1500,
     likes: 200,
     hasLiked: false
@@ -38,6 +39,7 @@ const EXAMPLE_VIDEOS = [
   {
     id: 2,
     title: "Elephants Dream",
+    category: "1",
     description: "First Blender Open Movie",
     thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Elephants_Dream_s1_05.jpg/320px-Elephants_Dream_s1_05.jpg",
     url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // MP4 direct
@@ -48,6 +50,7 @@ const EXAMPLE_VIDEOS = [
   {
     id: 3,
     title: "Sintel",
+    category: "1",
     description: "Third Blender Open Movie",
     thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Sintel_poster.jpg/320px-Sintel_poster.jpg",
     url: "https://test-streams.mux.dev/test.m3u8", // Another HLS stream
@@ -73,7 +76,6 @@ export const fetchVideo = async (id: string) => {
     return response;
   } catch (error: any) {
     if (error.response?.status === 404) {
-      // Try to find a fallback video
       const fallbackVideo = EXAMPLE_VIDEOS.find(v => v.id === parseInt(id));
       if (fallbackVideo) {
         return { data: fallbackVideo };
@@ -85,6 +87,21 @@ export const fetchVideo = async (id: string) => {
 };
 
 export const updateLikes = async (id: number) => {
-  const response = await api.post(`/videos/${id}/like`);
+  const response = await api.patch(`/videos/${id}/increment/likes`);
   return response;
+};
+
+export const updateViews = async (id: number) => {
+  const response = await api.patch(`/videos/${id}/increment/views`);
+  return response;
+};
+
+// Add this helper function
+export const validateVideoUrl = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
 };

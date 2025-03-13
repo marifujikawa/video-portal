@@ -1,36 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import ContentLoader from 'react-content-loader';
-import { Video } from '../../types';
-import { updateLikes } from '../../services/video';
+import { Video } from '../../../types';
+import { updateLikes, updateViews, validateVideoUrl } from '../../../services/video';
 import styles from './VideoDetail.module.css';
 import { FaThumbsUp } from 'react-icons/fa';
+import VideoDetailSkeleton from '../VideoSkeleton/VideoDetailSkeleton';
 
 interface VideoDetailProps {
   pageProps: {
-    video: {
+    video?: {
       data: Video;
     };
   };
 }
 
-const VideoDetailSkeleton: React.FC = () => (
-    <ContentLoader
-        speed={2}
-        width={800}
-        height={400}
-        viewBox="0 0 800 400"
-        backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
-    >
-        <rect x="0" y="0" rx="0" ry="0" width="800" height="400" />
-    </ContentLoader>
-);
-
 const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
   const [videoData, setVideoData] = useState<Video | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string>('');
 
   useEffect(() => {
     console.log('Received pageProps:', pageProps);
@@ -42,6 +30,36 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
       setIsLoading(false);
     }
   }, [pageProps]);
+
+  useEffect(() => {
+    if (videoData?.id) {
+      updateViews(videoData.id);
+    }
+  }, [videoData?.id]);
+
+  useEffect(() => {
+    const validateAndSetUrl = async () => {
+      if (!videoData) return;
+
+      const isPrimaryValid = await validateVideoUrl(videoData.url);
+      if (isPrimaryValid) {
+        setVideoUrl(videoData.url);
+        return;
+      }
+
+      if (videoData.backupUrl) {
+        const isBackupValid = await validateVideoUrl(videoData.backupUrl);
+        if (isBackupValid) {
+          setVideoUrl(videoData.backupUrl);
+          return;
+        }
+      }
+
+      setVideoUrl('https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+    };
+
+    validateAndSetUrl();
+  }, [videoData]);
 
   const handleLike = async () => {
     if (!videoData) return;
@@ -64,7 +82,7 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !videoData) {
     return <VideoDetailSkeleton />;
   }
 
@@ -76,10 +94,25 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
     <div className={styles.detail}>
       <div className={styles.playerContainer}>
         <ReactPlayer
-          url={videoData.url}
+          url={videoUrl}
           controls
           width="100%"
           height="100%"
+          config={{
+            file: {
+              attributes: {
+                crossOrigin: "anonymous",
+              },
+              forceVideo: true,
+              forceHLS: false,
+            }
+          }}
+          onError={(e) => {
+            console.error('Video playback error:', e);
+            if (videoData?.backupUrl && videoUrl !== videoData.backupUrl) {
+              setVideoUrl(videoData.backupUrl);
+            }
+          }}
         />
       </div>
       <div className={styles.info}>

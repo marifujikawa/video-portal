@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './SectionBelowHeader.module.css';
+import styles from './HeroSection.module.css';
 
-const SectionBelowHeader: React.FC = () => {
+const HeroSection: React.FC = () => {
   return (
     <section className={styles.section}>
       <div className={styles.content}>
@@ -20,4 +20,4 @@ const SectionBelowHeader: React.FC = () => {
   );
 };
 
-export default SectionBelowHeader;
+export default HeroSection;

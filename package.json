@@ -16,7 +16,6 @@
     "postinstall": "npm install --workspace=client && npm install --workspace=server"
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/hls.js": "^0.13.3",
     "hls.js": "^1.5.20",
@@ -24,7 +23,9 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
     "@types/jest": "^29.5.14",
+    "@types/react-transition-group": "^4.4.12",
     "jest": "^29.7.0"
   }
 }

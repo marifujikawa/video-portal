@@ -2,9 +2,9 @@ import type { GetServerSideProps, Metadata } from 'next';
 import { Video } from '../types';
 import { fetchVideos } from '../services/video';
 import React, { useRef } from 'react';
-import VideoCard from '../components/video/VideoCard';
+import VideoCard from '../components/video/VideoCard/VideoCard';
 import styles from '../styles/Home.module.css';
-import SectionBelowHeader from '../components/SectionBelowHeader';
+import HeroSection from '../components/video/HeroSection/HeroSection';
 
 interface HomeProps {
   initialVideos: {
@@ -58,7 +58,7 @@ export default function Home({ initialVideos }: HomeProps) {
 
   return (
     <div className={styles.container}>
-      <SectionBelowHeader />
+      <HeroSection />
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Continuar reprodução</h2>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Video } from '../../types';
+import { Video } from '../../../types';
 import styles from './VideoCard.module.css';
 
 interface VideoCardProps {
