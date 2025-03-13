@@ -1,0 +1,81 @@
+.detail {
+    padding: 32px 0;
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.playerContainer {
+    position: relative;
+    padding-top: 56.25%;
+    margin-bottom: 32px;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.playerContainer > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.info {
+    padding: 0;
+}
+
+.info h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin: 0 0 16px 0;
+    line-height: 32px;
+}
+
+.stats {
+    display: flex;
+    gap: 24px;
+    margin: 16px 0;
+    color: rgba(255, 255, 255, 0.6);
+    align-items: center;
+}
+
+.likeButton {
+    background: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    color: #888;
+    cursor: pointer;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.thumbIcon {
+    font-size: 1.2rem;
+}
+
+.likeButton:hover {
+    border-color: #555;
+    color: #888;
+}
+
+.likeButton.liked {
+    background: #333;
+    color: white;
+}
+
+.likeButton.liked:hover {
+    background: #505050;
+}
+
+.description {
+    margin-top: 24px;
+    line-height: 24px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+}

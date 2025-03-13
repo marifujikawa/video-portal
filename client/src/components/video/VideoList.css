@@ -1,0 +1,11 @@
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 24px;
+}
+
+.video-skeleton {
+    border-radius: 8px;
+    overflow: hidden;
+}
