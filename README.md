@@ -45,6 +45,5 @@ The application expects the following API endpoints:
 
 - `GET /videos` - Fetch all videos with pagination
 - `GET /videos/:id` - Fetch single video details
-- `PATCH /videos/:id/increment/views` - Update videos views
 - `PATCH /videos/:id/increment/likes` - Fetch videos likes
 
