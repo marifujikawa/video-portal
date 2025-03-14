@@ -27,7 +27,6 @@ cd video-portal
 
 2. Install dependencies:
 ```bash
-cd client
 npm install
 ```
 
@@ -46,4 +45,5 @@ The application expects the following API endpoints:
 - `GET /videos` - Fetch all videos with pagination
 - `GET /videos/:id` - Fetch single video details
 - `PATCH /videos/:id/increment/likes` - Fetch videos likes
+
 

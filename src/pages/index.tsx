@@ -6,13 +6,13 @@ import VideoCard from '../components/video/VideoCard/VideoCard';
 import styles from '../styles/Home.module.css';
 import HeroSection from '../components/video/HeroSection/HeroSection';
 
-interface HomeProps {
+export interface HomeProps {
   initialVideos: {
     data: Video[];
     meta: {
-      current_page: number;
-      last_page: number;
-      total: number;
+      current_page: Number;
+      last_page: Number;
+      total: Number;
     };
   }
 }

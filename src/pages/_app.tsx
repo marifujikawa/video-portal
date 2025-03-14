@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import Header from '../components/layout/Header'
 import '../styles/globals.css'
+import Head from 'next/head'
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -25,6 +26,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <title>Video Portal</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.png" />
+      </Head>
+       
+      
       <Header />
       <main className="container">
         {loading ? (
@@ -33,6 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         )}
       </main>
-    </>
+      </>
   )
 }

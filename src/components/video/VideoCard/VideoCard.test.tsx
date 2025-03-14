@@ -1,28 +1,49 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import VideoCard from './VideoCard';
+import { Video } from '@/types';
+import { render } from '@/test-utils';
 
-const mockVideo = {
-  id: '1',
-  title: 'Test Video',
-  thumbnail: '/test-thumbnail.jpg',
-  description: 'Test description',
+// Mock the Next.js navigation module
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    prefetch: jest.fn(),
+    pathname: '/',
+    route: '/',
+  }),
+}));
+
+const mockVideo: Video = {
+  id: 1,
+  title: 'Video 1',
+  thumbnail: '/thumbnail1.jpg',
+  description: 'Description 1',
   category: '1',
-  duration: '10:00'
+  url: '',
+  views: 100,
+  likes: 50
 };
 
 describe('VideoCard', () => {
-  it('should render video information correctly', () => {
+  beforeEach(() => {
     render(<VideoCard video={mockVideo} />);
+  });
 
+  it('should render video information correctly', () => {
     expect(screen.getByText(mockVideo.title)).toBeInTheDocument();
-    expect(screen.getByText(mockVideo.duration)).toBeInTheDocument();
   });
 
   it('should render thumbnail image', () => {
-    render(<VideoCard video={mockVideo} />);
-
     const thumbnail = screen.getByRole('img');
     expect(thumbnail).toHaveAttribute('src', mockVideo.thumbnail);
     expect(thumbnail).toHaveAttribute('alt', mockVideo.title);
+  });
+  
+  it('should display the correct view count', () => {
+    expect(screen.getByText(`${mockVideo.views} views`)).toBeInTheDocument();
+  });
+
+  it('should display the correct like count', () => {
+    expect(screen.getByText(`${mockVideo.likes} likes`)).toBeInTheDocument();
   });
 });

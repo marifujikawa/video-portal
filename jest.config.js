@@ -5,13 +5,16 @@ const createJestConfig = nextJest({
 })
 
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
     '^@/components/(.*)$': '<rootDir>/src/components/$1',
     '^@/pages/(.*)$': '<rootDir>/src/pages/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  }
 }
 
 module.exports = createJestConfig(customJestConfig)
