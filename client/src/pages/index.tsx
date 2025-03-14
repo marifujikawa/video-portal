@@ -49,6 +49,10 @@ export default function Home({ initialVideos }: HomeProps) {
   const aoVivoRef = useRef<HTMLDivElement>(null);
   const minhaListaRef = useRef<HTMLDivElement>(null);
 
+  const getVideosByCategory = (category: string) => {
+    return initialVideos.data.filter(video => video.category === category);
+  };
+
   const scroll = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
     if (ref.current) {
       const scrollAmount = direction === 'left' ? -400 : 400;
@@ -69,7 +73,7 @@ export default function Home({ initialVideos }: HomeProps) {
           </div>
         </div>
         <div className={styles.videoList} ref={continuarRef}>
-          {initialVideos.data.map(video => (
+          {getVideosByCategory('1').map(video => (
             <VideoCard key={video.id} video={video} />
           ))}
         </div>
@@ -84,7 +88,7 @@ export default function Home({ initialVideos }: HomeProps) {
           </div>
         </div>
         <div className={styles.videoList} ref={aoVivoRef}>
-          {initialVideos.data.map(video => (
+          {getVideosByCategory('2').map(video => (
             <VideoCard key={video.id} video={video} />
           ))}
         </div>
@@ -99,7 +103,7 @@ export default function Home({ initialVideos }: HomeProps) {
           </div>
         </div>
         <div className={styles.videoList} ref={minhaListaRef}>
-          {initialVideos.data.map(video => (
+          {getVideosByCategory('3').map(video => (
             <VideoCard key={video.id} video={video} />
           ))}
         </div>
