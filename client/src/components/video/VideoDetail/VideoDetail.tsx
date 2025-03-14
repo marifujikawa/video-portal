@@ -69,14 +69,16 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
       
       setVideoData({
         ...videoData,
-        hasLiked: !currentLiked
+        hasLiked: !currentLiked,
+        likes: videoData.likes + (currentLiked ? -1 : 1)
       });
 
       await updateLikes(videoData.id);
     } catch (error) {
       setVideoData({
         ...videoData,
-        hasLiked: videoData.hasLiked
+        hasLiked: videoData.hasLiked,
+        likes: videoData.likes
       });
       console.error('Error updating likes:', error);
     }
@@ -124,7 +126,7 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
             className={`${styles.likeButton} ${videoData.hasLiked ? styles.liked : ''}`}
           >
             <FaThumbsUp className={styles.thumbIcon} />
-            <span>Gostei</span>
+            <span>Gostei ({videoData.likes})</span>
           </button>
         </div>
         <p className={styles.description}>{videoData.description}</p>
