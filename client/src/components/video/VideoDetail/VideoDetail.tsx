@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { Video } from '../../../types';
-import { updateLikes, updateViews, validateVideoUrl } from '../../../services/video';
+import { updateLikes, validateVideoUrl } from '../../../services/video';
 import styles from './VideoDetail.module.css';
 import { FaThumbsUp } from 'react-icons/fa';
 import VideoDetailSkeleton from '../VideoSkeleton/VideoDetailSkeleton';
@@ -30,12 +30,6 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
       setIsLoading(false);
     }
   }, [pageProps]);
-
-  useEffect(() => {
-    if (videoData?.id) {
-      updateViews(videoData.id);
-    }
-  }, [videoData?.id]);
 
   useEffect(() => {
     const validateAndSetUrl = async () => {

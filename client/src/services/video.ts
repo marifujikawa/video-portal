@@ -62,7 +62,7 @@ const EXAMPLE_VIDEOS = [
 
 export const fetchVideos = async () => {
   try {
-    const response = await api.get<PaginatedResponse<Video>>('/videos');
+    const response = await api.get<PaginatedResponse<Video>>('/videos?_page=1&_per_page=100');
     return response.data;
   } catch (error) {
     console.warn('API call failed, using fallback videos:', error);
@@ -91,12 +91,7 @@ export const updateLikes = async (id: number) => {
   return response;
 };
 
-export const updateViews = async (id: number) => {
-  const response = await api.patch(`/videos/${id}/increment/views`);
-  return response;
-};
 
-// Add this helper function
 export const validateVideoUrl = async (url: string): Promise<boolean> => {
   try {
     const response = await fetch(url, { method: 'HEAD' });
