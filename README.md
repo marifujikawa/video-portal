@@ -35,8 +35,12 @@ npm install
 npm run dev
 ````
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+5. To run the tests:
+```bash
+npm run test
+````
 
 ## API Integration
 
