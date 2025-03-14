@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { Video } from '../../types'
 import { fetchVideo } from '../../services/video'
-import VideoDetail from '../../components/video/VideoDetail/VideoDetail';
+import VideoDetail from '../../components/video/VideoDetail/VideoDetail'
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   try {
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 }
 
-const VideoPage = (props: { video?: { data: Video; } | undefined}) => {
+const VideoPage = (props: { video?: { data: Video; } | undefined, error?: string }) => {
   return <VideoDetail pageProps={props} />;
 };
 

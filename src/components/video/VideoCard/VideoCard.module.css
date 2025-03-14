@@ -1,15 +1,10 @@
 .card {
   cursor: pointer;
-  transition: transform 0.2s;
   width: 300px;
   height: 200px;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-}
-
-.card:hover {
-  transform: scale(1.05);
 }
 
 .thumbnailContainer {

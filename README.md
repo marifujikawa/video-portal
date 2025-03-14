@@ -33,14 +33,14 @@ npm install
 3. Run the development server:
 ```bash
 npm run dev
-````
+```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 5. To run the tests:
 ```bash
 npm run test
-````
+```
 
 ## API Integration
 
@@ -48,6 +48,7 @@ The application expects the following API endpoints:
 
 - `GET /videos` - Fetch all videos with pagination
 - `GET /videos/:id` - Fetch single video details
-- `PATCH /videos/:id/increment/likes` - Fetch videos likes
+- `PATCH /videos/:id/increment/likes` - Update video likes
+- `GET /videos?title_contains=keyword` - Filter videos by title
 
 

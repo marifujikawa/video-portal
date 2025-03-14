@@ -60,9 +60,22 @@ export default function Home({ initialVideos }: HomeProps) {
     }
   };
 
+  if (initialVideos.data.length === 0) {
+    return (
+      <div className={styles.container}>
+        <HeroSection />
+        <div className={styles.noContent}>
+          <h2>No videos available</h2>
+          <p>Please check back later.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <HeroSection />
+      
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Continuar reprodução</h2>
@@ -78,6 +91,7 @@ export default function Home({ initialVideos }: HomeProps) {
           ))}
         </div>
       </section>
+      
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Ao vivo</h2>
@@ -93,6 +107,7 @@ export default function Home({ initialVideos }: HomeProps) {
           ))}
         </div>
       </section>
+      
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Minha lista</h2>

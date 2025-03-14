@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import VideoCard from '../VideoCard';
+import VideoCard from '../VideoCard/VideoCard';
 import VideoCardSkeleton from '../VideoSkeleton/VideoCardSkeleton';
 import { Video } from '../../../types';
 import styles from './VideoList.module.css';
@@ -24,14 +24,21 @@ const VideoList: React.FC<VideoListProps> = ({ initialVideos, category, isLoadin
 
   if (isLoading) {
     return (
-      <div className={styles.section}>
-        <h2>{category}</h2>
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2>{category}</h2>
+          <div className={styles.scrollButtons}>
+            <span className={styles.seeMore}>Veja mais</span>
+            <button disabled>&lt;</button>
+            <button disabled>&gt;</button>
+          </div>
+        </div>
         <div className={styles.skeletonContainer}>
-          {[...Array(4)].map((_, i) => (
-            <VideoCardSkeleton key={i} />
+          {Array(6).fill(0).map((_, idx) => (
+            <VideoCardSkeleton key={`list-skeleton-${category}-${idx}`} />
           ))}
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -40,6 +47,7 @@ const VideoList: React.FC<VideoListProps> = ({ initialVideos, category, isLoadin
       <div className={styles.sectionHeader}>
         <h2>{category}</h2>
         <div className={styles.scrollButtons}>
+          <span className={styles.seeMore}>Veja mais</span>
           <button onClick={() => handleScroll('left')}>&lt;</button>
           <button onClick={() => handleScroll('right')}>&gt;</button>
         </div>

@@ -1,37 +1,25 @@
+import React from 'react';
 import ContentLoader from 'react-content-loader';
-import styles from '../VideoDetail/VideoDetail.module.css';
+import styles from './VideoDetailSkeleton.module.css';
 
 const VideoDetailSkeleton = () => {
-  // Use fixed unique IDs for each content loader
   return (
     <div className={styles.detail}>
       <div className={styles.playerContainer}>
         <ContentLoader
-          speed={2}
+          speed={1.2}
           width="100%"
           height="100%"
-          viewBox="0 0 800 400"
-          backgroundColor="#1a1a1a"
-          foregroundColor="#262626"
+          viewBox="0 0 1024 576"
+          backgroundColor="#2a2a2a"
+          foregroundColor="#3a3a3a"
           uniqueKey="player-skeleton"
         >
-          <rect x="0" y="0" rx="8" ry="8" width="100%" height="100%" />
-        </ContentLoader>
-      </div>
-
-      <div className={styles.info}>
-        <ContentLoader
-          speed={2}
-          width="100%"
-          height={200}
-          viewBox="0 0 800 200"
-          backgroundColor="#1a1a1a"
-          foregroundColor="#262626"
-          uniqueKey="info-skeleton"
-        >
-          <rect x="0" y="0" rx="4" ry="4" width="600" height="32" />
-          <rect x="0" y="50" rx="4" ry="4" width="100" height="24" />
-          <rect x="0" y="90" rx="4" ry="4" width="800" height="80" />
+          <rect x="0" y="0" rx="4" ry="4" width="100%" height="100%" />
+          <circle cx="512" cy="288" r="50" />
+          <polygon points="500,265 500,310 535,288" fill="#3a3a3a" />
+          <rect x="0" y="540" rx="0" ry="0" width="100%" height="36" />
+          <rect x="20" y="557" rx="2" ry="2" width="70%" height="4" />
         </ContentLoader>
       </div>
     </div>

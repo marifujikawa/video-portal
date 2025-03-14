@@ -1,0 +1,94 @@
+.detail {
+  min-height: 100vh;
+  padding: 32px 0;
+  max-width: 1024px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.playerContainer {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  /* Remove margin-bottom so there's no space for a second element */
+}
+
+.playerContainer > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.info {
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.relatedSection {
+  margin-top: 48px;
+}
+
+.relatedVideos {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 16px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #444 #1a1a1a;
+}
+
+.relatedVideoItem {
+  flex: 0 0 240px;
+  height: 135px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.relatedVideos::-webkit-scrollbar {
+  height: 6px;
+}
+
+.relatedVideos::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.relatedVideos::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+}
+
+.additionalInfo {
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+.titlePlaceholder {
+  margin-bottom: 16px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

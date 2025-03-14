@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Video } from '../../../types';
 import styles from './VideoCard.module.css';
+import { motion } from 'framer-motion';
 
 interface VideoCardProps {
     video: Video;
@@ -15,7 +16,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
     };
 
     return (
-        <div className={styles.card} onClick={handleClick}>
+        <motion.div 
+            className={styles.card} 
+            onClick={handleClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+        >
             <div className={styles.thumbnailContainer}>
                 <img 
                     src={video.thumbnail} 
@@ -31,8 +40,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
                     <span>{video.likes} likes</span>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
-export default VideoCard;
+export default memo(VideoCard);

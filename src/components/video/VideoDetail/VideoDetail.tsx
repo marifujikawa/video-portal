@@ -1,27 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { Video } from '../../../types';
-import { updateLikes, validateVideoUrl } from '../../../services/video';
+import { updateLikes, validateVideoUrl, retryVideoLoad } from '../../../services/video';
 import styles from './VideoDetail.module.css';
-import { FaThumbsUp } from 'react-icons/fa';
+import { FaThumbsUp, FaExclamationTriangle, FaSync } from 'react-icons/fa';
 import VideoDetailSkeleton from '../VideoSkeleton/VideoDetailSkeleton';
+import { useRouter } from 'next/navigation';
 
 interface VideoDetailProps {
   pageProps: {
     video?: {
       data: Video;
     };
+    error?: string;
   };
 }
 
 const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
+  const router = useRouter();
   const [videoData, setVideoData] = useState<Video | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string>('');
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
-    console.log('Received pageProps:', pageProps);
+    if (pageProps?.error) {
+      setError(pageProps.error);
+      setIsLoading(false);
+      return;
+    }
+
     if (pageProps?.video?.data) {
       setVideoData(pageProps.video.data);
       setIsLoading(false);
@@ -35,24 +45,34 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
     const validateAndSetUrl = async () => {
       if (!videoData) return;
 
-      const isPrimaryValid = await validateVideoUrl(videoData.url);
-      if (isPrimaryValid) {
-        setVideoUrl(videoData.url);
-        return;
-      }
+      setIsRetrying(true);
+      setPlaybackError(null);
 
-      if (videoData.backupUrl) {
-        const isBackupValid = await validateVideoUrl(videoData.backupUrl);
-        if (isBackupValid) {
-          setVideoUrl(videoData.backupUrl);
-          return;
+      try {
+        const urlsToTry = [
+          videoData.url,
+          videoData.backupUrl,
+          'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+        ].filter(Boolean) as string[];
+
+        const validUrl = await retryVideoLoad(urlsToTry);
+        
+        if (validUrl) {
+          setVideoUrl(validUrl);
+        } else {
+          setPlaybackError('Unable to load video from any source. Please try again later.');
         }
+      } catch (err) {
+        console.error('Error validating video URLs:', err);
+        setPlaybackError('Error loading video. Please try again.');
+      } finally {
+        setIsRetrying(false);
       }
-
-      setVideoUrl('https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
     };
 
-    validateAndSetUrl();
+    if (videoData) {
+      validateAndSetUrl();
+    }
   }, [videoData]);
 
   const handleLike = async () => {
@@ -78,38 +98,108 @@ const VideoDetail: React.FC<VideoDetailProps> = ({ pageProps }) => {
     }
   };
 
-  if (isLoading || !videoData) {
+  const handleRetry = () => {
+    if (!videoData) return;
+    
+    setPlaybackError(null);
+    setVideoUrl('');
+    
+    const validateAndSetUrl = async () => {
+      setIsRetrying(true);
+      
+      try {
+        const urlsToTry = [
+          videoData.url,
+          videoData.backupUrl,
+          'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+        ].filter(Boolean) as string[];
+
+        const validUrl = await retryVideoLoad(urlsToTry);
+        
+        if (validUrl) {
+          setVideoUrl(validUrl);
+        } else {
+          setPlaybackError('Unable to load video from any source. Please try again later.');
+        }
+      } catch (err) {
+        console.error('Error validating video URLs:', err);
+        setPlaybackError('Error loading video. Please try again.');
+      } finally {
+        setIsRetrying(false);
+      }
+    };
+
+    validateAndSetUrl();
+  };
+
+  if (isLoading) {
     return <VideoDetailSkeleton />;
   }
 
   if (error || !videoData) {
-    return <div className={styles.error}>Error: {error || 'Video not found'}</div>;
+    return (
+      <div className={styles.errorContainer}>
+        <FaExclamationTriangle size={48} />
+        <h2>Error</h2>
+        <p>{error || 'Video not found'}</p>
+        <button 
+          className={styles.retryButton}
+          onClick={() => router.push('/')}
+        >
+          Back to Home
+        </button>
+      </div>
+    );
   }
 
   return (
     <div className={styles.detail}>
       <div className={styles.playerContainer}>
-        <ReactPlayer
-          url={videoUrl}
-          controls
-          width="100%"
-          height="100%"
-          config={{
-            file: {
-              attributes: {
-                crossOrigin: "anonymous",
-              },
-              forceVideo: true,
-              forceHLS: false,
-            }
-          }}
-          onError={(e) => {
-            console.error('Video playback error:', e);
-            if (videoData?.backupUrl && videoUrl !== videoData.backupUrl) {
-              setVideoUrl(videoData.backupUrl);
-            }
-          }}
-        />
+        {playbackError ? (
+          <div className={styles.playerError}>
+            <FaExclamationTriangle size={48} />
+            <p>{playbackError}</p>
+            <button 
+              className={styles.retryButton}
+              onClick={handleRetry}
+              disabled={isRetrying}
+            >
+              {isRetrying ? (
+                <>
+                  <FaSync className={styles.spinIcon} /> Retrying...
+                </>
+              ) : (
+                'Try Again'
+              )}
+            </button>
+          </div>
+        ) : !videoUrl ? (
+          <div className={styles.playerLoading}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading video...</p>
+          </div>
+        ) : (
+          <ReactPlayer
+            url={videoUrl}
+            controls
+            width="100%"
+            height="100%"
+            config={{
+              file: {
+                attributes: {
+                  crossOrigin: "anonymous",
+                },
+                forceVideo: true,
+                forceHLS: false,
+              }
+            }}
+            onError={(e) => {
+              console.error('Video playback error:', e);
+              setPlaybackError('Error playing this video. Click to try an alternative source.');
+            }}
+            className={styles.reactPlayer}
+          />
+        )}
       </div>
       <div className={styles.info}>
         <h1>{videoData.title}</h1>

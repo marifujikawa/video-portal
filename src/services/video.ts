@@ -23,6 +23,22 @@ const api = axios.create({
   baseURL: 'http://localhost:80/api'
 });
 
+api.interceptors.request.use(
+  config => config,
+  error => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('Response error:', error);
+    return Promise.reject(error);
+  }
+);
+
 const EXAMPLE_VIDEOS = [
   {
     id: 1,
@@ -60,13 +76,37 @@ const EXAMPLE_VIDEOS = [
   }
 ];
 
-export const fetchVideos = async () => {
+export const fetchVideos = async (filters: { title?: string, category?: string } = {}) => {
   try {
-    const response = await api.get<PaginatedResponse<Video>>('/videos?_page=1&_per_page=100');
+    let queryParams = '?_page=1&_per_page=100';
+    
+    if (filters.title) {
+      queryParams += `&title_contains=${encodeURIComponent(filters.title)}`;
+    }
+    
+    if (filters.category) {
+      queryParams += `&category=${encodeURIComponent(filters.category)}`;
+    }
+    
+    const response = await api.get<PaginatedResponse<Video>>(`/videos${queryParams}`);
     return response.data;
   } catch (error) {
     console.warn('API call failed, using fallback videos:', error);
-    return { data: EXAMPLE_VIDEOS };
+    
+    let filteredVideos = [...EXAMPLE_VIDEOS];
+    if (filters.title) {
+      const searchTerm = filters.title.toLowerCase();
+      filteredVideos = filteredVideos.filter(video => 
+        video.title.toLowerCase().includes(searchTerm) || 
+        video.description.toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    if (filters.category) {
+      filteredVideos = filteredVideos.filter(video => video.category === filters.category);
+    }
+    
+    return { data: filteredVideos };
   }
 };
 
@@ -91,12 +131,30 @@ export const updateLikes = async (id: number) => {
   return response;
 };
 
-
 export const validateVideoUrl = async (url: string): Promise<boolean> => {
+  if (!url) return false;
+  
   try {
-    const response = await fetch(url, { method: 'HEAD' });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
+    const response = await fetch(url, { 
+      method: 'HEAD',
+      signal: controller.signal 
+    });
+    
+    clearTimeout(timeoutId);
     return response.ok;
   } catch (error) {
+    console.warn(`Video URL validation failed for ${url}:`, error);
     return false;
   }
+};
+
+export const retryVideoLoad = async (urls: string[]): Promise<string | null> => {
+  for (const url of urls) {
+    const isValid = await validateVideoUrl(url);
+    if (isValid) return url;
+  }
+  return null;
 };
